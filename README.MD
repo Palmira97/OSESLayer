@@ -9,7 +9,7 @@ To make it work properly, you need to:
   If there are no other kernel modules to load at boot time, write <br/>
         KERNEL_MODULE_AUTOLOAD += "ppgsensor-driver" <br/>
   Otherwise, if you have already defined a command like <br/>
-        KERNEL_MODULE_AUTOLOAD += "kernelmodule1 kernelmodule2 ... kernelmodulen" <br/>
+        KERNEL_MODULE_AUTOLOAD += "kernelmodule1 kernelmodule2 ... kernelmoduleN" <br/>
   Then you need to append the kernel module name in this way <br/>
-        KERNEL_MODULE_AUTOLOAD += " ... kernelmodulen ppgsensor-driver" <br/>
-  In the end, execute bitbake core-image-minimal for your qemuarm machine and run the machine to test the driver. <br/>
+        KERNEL_MODULE_AUTOLOAD += " ... kernelmoduleN ppgsensor-driver" <br/>
+- Finally, execute bitbake core-image-minimal for your qemuarm machine and run the machine to test the driver. <br/>
