@@ -8,6 +8,7 @@ COMPATIBLE_MACHINE = "qemuarm"
 
 SRC_URI = "file://Makefile \
            file://ppgsensor-driver.c \
+	   file://data.h \
           "
 S = "${WORKDIR}"
 

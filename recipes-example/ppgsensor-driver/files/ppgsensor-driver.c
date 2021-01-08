@@ -7,8 +7,11 @@
 #include <linux/fs.h>
 #include <linux/cdev.h>
 #include <linux/device.h>
+#include <linux/uaccess.h>
 #include <asm/uaccess.h>
 #include "data.h"
+
+#define NSAMPLES sizeof(ppg) / sizeof(int)
 
 static dev_t ppgsensor_dev;
 
@@ -18,12 +21,17 @@ struct class *myclass = NULL;
 
 static char buffer[64];
 
-static int index;
+static int index; //index of ppg vector
 
 ssize_t ppgsensor_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
 {
     //printk(KERN_INFO "[ppgsensor] read (count=%d, offset=%d)\n", (int)count, (int)*f_pos );
-    //ppg[index++]; TODO define how to read this value
+    int ppgdata = ppg[index];
+    index = (index + 1) % NSAMPLES;
+    printk(KERN_DEBUG "Current index value = %d\n", index);
+    if ((copy_to_user((int*) buf, &ppgdata, count)) != 0) {
+	printk(KERN_ERR "[ppgsensor] not read correctly!\n");
+	}
     return count;
 }
 
@@ -31,6 +39,8 @@ int ppgsensor_open(struct inode *i, struct file *filp)
 {
     printk(KERN_INFO "[ppgsensor] has been accessed correctly\n");
     index = 0;
+    printk(KERN_DEBUG "Current index value = %d\n", index);
+    printk(KERN_DEBUG "NSAMPLES = %d\n", NSAMPLES);
     return 0;
 }
 
