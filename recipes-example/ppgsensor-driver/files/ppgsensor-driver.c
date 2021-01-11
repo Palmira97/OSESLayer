@@ -11,7 +11,7 @@
 #include <asm/uaccess.h>
 #include "data.h"
 
-#define NSAMPLES sizeof(ppg) / sizeof(int)
+#define NSAMPLES 2048
 
 static dev_t ppgsensor_dev;
 
@@ -25,16 +25,15 @@ static int index; //index of ppg vector (use offset instead of index)
 
 ssize_t ppgsensor_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
 {
-    //printk(KERN_INFO "[ppgsensor] read (count=%d, offset=%d)\n", (int)count, (int)*f_pos );
-    int ppgdata = ppg[index];
-    printk(KERN_INFO "Current vector value: %d\n", ppgdata);
-    printk(KERN_INFO "Previous index value = %d\n", index);	//TODO REMOVE
+    int ppgdata;
+    ppgdata = ppg[index];
+    printk(KERN_INFO "Current vector value: %d\n", ppgdata);		//TODO REMOVE
+    printk(KERN_INFO "Index value BEFORE updating = %d\n", index);	//TODO REMOVE
     index = (index + 1) % NSAMPLES;
-    printk(KERN_INFO "Current index value = %d\n", index);	//TODO REMOVE
+    printk(KERN_INFO "Index value AFTER updating = %d\n", index);	//TODO REMOVE
     if ((copy_to_user((int*) buf, &ppgdata, count)) != 0) {  
 	printk(KERN_ERR "[ppgsensor] not read correctly!\n");
 	}
-    //*f_pos += count;
     return count;
 }
 
