@@ -27,10 +27,7 @@ ssize_t ppgsensor_read(struct file *filp, char __user *buf, size_t count, loff_t
 {
     int ppgdata;
     ppgdata = ppg[index];
-    printk(KERN_INFO "Current vector value: %d\n", ppgdata);		//TODO REMOVE
-    printk(KERN_INFO "Index value BEFORE updating = %d\n", index);	//TODO REMOVE
     index = (index + 1) % NSAMPLES;
-    printk(KERN_INFO "Index value AFTER updating = %d\n", index);	//TODO REMOVE
     if ((copy_to_user((int*) buf, &ppgdata, count)) != 0) {  
 	printk(KERN_ERR "[ppgsensor] not read correctly!\n");
 	}
@@ -40,10 +37,7 @@ ssize_t ppgsensor_read(struct file *filp, char __user *buf, size_t count, loff_t
 int ppgsensor_open(struct inode *i, struct file *filp)
 {
     printk(KERN_INFO "[ppgsensor] has been accessed correctly\n");
-    printk(KERN_INFO "Not initialized index value = %d\n", index); 	//TODO REMOVE
     index = 0;
-    printk(KERN_INFO "Current index value = %d\n", index); 	//TODO REMOVE
-    printk(KERN_INFO "NSAMPLES = %d\n", NSAMPLES);		//TODO REMOVE
     return 0;
 }
 
